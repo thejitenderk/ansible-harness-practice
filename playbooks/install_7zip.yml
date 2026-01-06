@@ -1,0 +1,5 @@
+---
+- name: Install 7-Zip on Windows
+  hosts: windows
+  roles:
+    - install_7zip
