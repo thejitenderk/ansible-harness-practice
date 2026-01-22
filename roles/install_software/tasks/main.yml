@@ -1,0 +1,16 @@
+---
+- name: Ensure 7-Zip is installed via Chocolatey
+  win_chocolatey:
+    name: 7zip
+    state: present
+
+- name: Ensure IIS is installed
+  win_chocolatey:
+    name: iis
+    state: present
+
+- name: Ensure IIS service is started
+  win_service:
+    name: W3SVC
+    state: started
+    start_mode: auto

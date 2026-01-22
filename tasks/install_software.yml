@@ -1,0 +1,20 @@
+---
+- name: Install 7-Zip and Web Server (IIS) on Windows
+  hosts: windows
+  become: yes
+  tasks:
+    - name: Install 7-Zip via Chocolatey
+      win_chocolatey:
+        name: 7zip
+        state: present
+
+    - name: Install IIS web server
+      win_chocolatey:
+        name: iis
+        state: present
+
+    - name: Ensure IIS is started
+      win_service:
+        name: W3SVC
+        start_mode: auto
+        state: started
