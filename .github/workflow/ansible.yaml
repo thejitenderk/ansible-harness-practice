@@ -1,0 +1,40 @@
+name: Ansible Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      inventory:
+        description: 'Inventory path (e.g. inventories/staging/hosts.yml)'
+        required: true
+        default: 'inventories/qa/hosts.yml'
+      playbook:
+        description: 'Playbook name (e.g. deploy.yml)'
+        required: true
+        default: 'playbooks/deploy.yml'
+
+jobs:
+  ansible:
+    name: Run Ansible
+    runs-on: ubuntu-latest
+    container:
+      image: cytopia/ansible:latest-tools
+      options: --user root
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install sshpass
+        run: apk add --no-cache sshpass        # alpine based image hai
+
+      - name: Run Playbook
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: 'False'
+        run: |
+          ansible-playbook \
+            -i ${{ github.event.inputs.inventory }} \
+            playbooks/${{ github.event.inputs.playbook }} \
+            --user ${{ secrets.ANSIBLE_USER }} \
+            --extra-vars "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
+            --extra-vars "ansible_become_password=${{ secrets.ANSIBLE_PASSWORD }}" \
+            -v
