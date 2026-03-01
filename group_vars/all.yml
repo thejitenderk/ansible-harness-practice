@@ -1,0 +1,2 @@
+ansible_user: azureadmin
+ansible_ssh_pass: Welcome$1234

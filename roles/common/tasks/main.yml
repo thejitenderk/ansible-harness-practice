@@ -1,0 +1,14 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install common packages
+  apt:
+    name:
+      - git
+      - curl
+      - wget
+      - unzip
+      - vim
+    state: present

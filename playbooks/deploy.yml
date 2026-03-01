@@ -1,0 +1,6 @@
+---
+- name: Deploy App
+  hosts: all
+  roles:
+    - common      # pehle
+    - webserver   # baad me
