@@ -10,7 +10,7 @@ on:
       playbook:
         description: 'Playbook name (e.g. deploy.yml)'
         required: true
-        default: 'playbooks/deploy.yml'
+        default: 'deploy.yml'
 
 jobs:
   ansible:
