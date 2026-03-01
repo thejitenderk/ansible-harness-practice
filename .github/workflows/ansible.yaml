@@ -34,7 +34,4 @@ jobs:
           ansible-playbook \
             -i ${{ github.event.inputs.inventory }} \
             playbooks/${{ github.event.inputs.playbook }} \
-            --user ${{ secrets.ANSIBLE_USER }} \
-            --extra-vars "ansible_password=${{ secrets.ANSIBLE_PASSWORD }}" \
-            --extra-vars "ansible_become_password=${{ secrets.ANSIBLE_PASSWORD }}" \
             -v
