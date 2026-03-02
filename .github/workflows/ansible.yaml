@@ -35,13 +35,11 @@ jobs:
           sshpass -p '${{ secrets.ANSIBLE_PASSWORD }}' ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password ${{ secrets.ANSIBLE_USER }}@4.194.41.194 echo "connected"
 
       - name: Run Playbook
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: 'False'
-          ANSIBLE_SSH_ARGS: '-o PreferredAuthentications=password -o PubkeyAuthentication=no -o StrictHostKeyChecking=no'
         run: |
           export SSHPASS="${{ secrets.ANSIBLE_PASSWORD }}"
           ansible-playbook \
             -i ${{ github.event.inputs.inventory }} \
             playbooks/${{ github.event.inputs.playbook }} \
             --extra-vars "ansible_user=${{ secrets.ANSIBLE_USER }} ansible_password=${{ secrets.ANSIBLE_PASSWORD }} ansible_become_password=${{ secrets.ANSIBLE_PASSWORD }}" \
+            -e "ansible_ssh_common_args='-o PreferredAuthentications=password -o PubkeyAuthentication=no -o StrictHostKeyChecking=no'" \
             -v
