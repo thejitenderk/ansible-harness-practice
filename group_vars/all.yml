@@ -1,2 +1,4 @@
 ansible_user: azureadmin
-ansible_ssh_pass: Welcome$1234
+ansible_password: Welcome$1234
+ansible_become_password: Welcome$1234
+ansible_connection: ssh
