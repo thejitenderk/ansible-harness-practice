@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       inventory:
-        description: 'Inventory path (e.g. inventories/staging/hosts)'
+        description: 'Inventory path (e.g. inventories/staging/hosts.yml)'
         required: true
-        default: 'inventories/qa'
+        default: 'inventories/qa/hosts.yml'
       playbook:
         description: 'Playbook name (e.g. deploy.yml)'
         required: true
@@ -16,33 +16,35 @@ jobs:
   ansible:
     name: Run Ansible
     runs-on: ubuntu-latest
+
     container:
       image: alpine/ansible:2.20.0
+
+    env:
+      ANSIBLE_HOST_KEY_CHECKING: "False"
+      ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+      ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Install sshpass
-        run: apk add --no-cache sshpass        # alpine based image hai
-      
-      - name: Debug sshpass
+        run: apk add --no-cache sshpass
+
+      - name: Verify sshpass
         run: |
           which sshpass
           sshpass -V
-          echo "Testing SSH connection..."
-          sshpass -p '${{ secrets.ANSIBLE_PASSWORD }}' ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password ${{ secrets.ANSIBLE_USER }}@20.164.208.6 echo "connected"
 
       - name: Run Playbook
         run: |
           ansible-playbook \
-            -i ${{ github.event.inputs.inventory }} \
-            playbooks/${{ github.event.inputs.playbook }} \
-            --extra-vars "ansible_user=${{ secrets.ANSIBLE_USER }} \
-                        ansible_password=${{ secrets.ANSIBLE_PASSWORD }} \
-                        ansible_become_password=${{ secrets.ANSIBLE_PASSWORD }} \
-                        ansible_connection=ssh \
-                        ansible_ssh_common_args='-o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no'" \
-            -v
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: "False"
+            -i "${{ github.event.inputs.inventory }}" \
+            "playbooks/${{ github.event.inputs.playbook }}" \
+            -e ansible_user="$ANSIBLE_USER" \
+            -e ansible_password="$ANSIBLE_PASSWORD" \
+            -e ansible_become_password="$ANSIBLE_PASSWORD" \
+            -e ansible_connection=ssh \
+            -e ansible_ssh_common_args="-o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no" \
+            -vv
