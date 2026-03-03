@@ -17,8 +17,7 @@ jobs:
     name: Run Ansible
     runs-on: ubuntu-latest
     container:
-      image: cytopia/ansible:latest-tools
-      options: --user root
+      image: alpine/ansible:2.20.0
 
     steps:
       - name: Checkout Code
