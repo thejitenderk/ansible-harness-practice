@@ -1,6 +1,7 @@
 ---
 - name: Deploy App
   hosts: all
+  become: true
   roles:
     - common      # pehle
     - webserver   # baad me
