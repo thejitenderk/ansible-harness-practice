@@ -1,2 +1,6 @@
 [web]
-20.164.208.6 ansible_user=azureadmin ansible_ssh_pass=Welcome$1234
+20.164.208.6 
+
+[web:vars]
+ansible_user=azureadmin
+ansible_ssh_pass=Welcome$1234
