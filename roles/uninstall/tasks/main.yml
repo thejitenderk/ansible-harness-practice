@@ -1,0 +1,12 @@
+---
+- name: stop and disabled nginx
+  service:
+    name: nginx
+    state: stopped
+    enabled: no
+
+- name: Install nginx
+  apt:
+    name: nginx
+    state: absent
+
