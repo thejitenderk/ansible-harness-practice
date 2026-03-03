@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       inventory:
-        description: 'Inventory path (e.g. inventories/staging/hosts.yml)'
+        description: 'Inventory path (e.g. inventories/qa)'
         required: true
-        default: 'inventories/qa/hosts.yml'
+        default: 'inventories/qa'
       playbook:
         description: 'Playbook name (e.g. deploy.yml)'
         required: true
@@ -17,9 +17,6 @@ jobs:
     name: Run Ansible
     runs-on: ubuntu-latest
 
-    container:
-      image: alpine/ansible:2.20.0
-
     env:
       ANSIBLE_HOST_KEY_CHECKING: "False"
       ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
@@ -29,13 +26,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install sshpass
-        run: apk add --no-cache sshpass
-
-      - name: Verify sshpass
+      - name: Install Ansible (Official PPA)
         run: |
-          which sshpass
-          sshpass -V
+          sudo apt update
+          sudo apt install -y software-properties-common
+          sudo add-apt-repository --yes --update ppa:ansible/ansible
+          sudo apt install -y ansible sshpass
+          ansible --version
 
       - name: Run Playbook
         run: |
@@ -47,4 +44,5 @@ jobs:
             -e ansible_become_password="$ANSIBLE_PASSWORD" \
             -e ansible_connection=ssh \
             -e ansible_ssh_common_args="-o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no" \
+            -f 1 \
             -vv
