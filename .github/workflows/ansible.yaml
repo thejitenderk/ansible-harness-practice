@@ -6,7 +6,7 @@ on:
       inventory:
         description: 'Inventory path (e.g. inventories/staging/hosts.yml)'
         required: true
-        default: 'inventories/qa/hosts.yml'
+        default: 'inventories/qa/hosts'
       playbook:
         description: 'Playbook name (e.g. deploy.yml)'
         required: true
