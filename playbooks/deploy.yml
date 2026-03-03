@@ -2,6 +2,7 @@
 - name: Deploy App
   hosts: all
   become: true
+  gather_facts: false
   roles:
     - common
     - webserver
