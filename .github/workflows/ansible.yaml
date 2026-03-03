@@ -31,7 +31,7 @@ jobs:
           which sshpass
           sshpass -V
           echo "Testing SSH connection..."
-          sshpass -p '${{ secrets.ANSIBLE_PASSWORD }}' ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password ${{ secrets.ANSIBLE_USER }}@4.194.41.194 echo "connected"
+          sshpass -p '${{ secrets.ANSIBLE_PASSWORD }}' ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password ${{ secrets.ANSIBLE_USER }}@20.164.208.6 echo "connected"
 
       - name: Run Playbook
         run: |
