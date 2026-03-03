@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       inventory:
-        description: 'Inventory path (e.g. inventories/staging/hosts.yml)'
+        description: 'Inventory path (e.g. inventories/staging/hosts)'
         required: true
-        default: 'inventories/qa/hosts'
+        default: 'inventories/qa'
       playbook:
         description: 'Playbook name (e.g. deploy.yml)'
         required: true
@@ -26,12 +26,12 @@ jobs:
       - name: Install sshpass
         run: apk add --no-cache sshpass        # alpine based image hai
       
-      - name: Debug sshpass
-        run: |
-          which sshpass
-          sshpass -V
-          echo "Testing SSH connection..."
-          sshpass -p '${{ secrets.ANSIBLE_PASSWORD }}' ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password ${{ secrets.ANSIBLE_USER }}@20.164.208.6 echo "connected"
+      # - name: Debug sshpass
+      #   run: |
+      #     which sshpass
+      #     sshpass -V
+      #     echo "Testing SSH connection..."
+      #     sshpass -p '${{ secrets.ANSIBLE_PASSWORD }}' ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password ${{ secrets.ANSIBLE_USER }}@20.164.208.6 echo "connected"
 
       - name: Run Playbook
         run: |
@@ -39,6 +39,5 @@ jobs:
           ansible-playbook \
             -i ${{ github.event.inputs.inventory }} \
             playbooks/${{ github.event.inputs.playbook }} \
-            --extra-vars "ansible_user=${{ secrets.ANSIBLE_USER }} ansible_password=${{ secrets.ANSIBLE_PASSWORD }} ansible_become_password=${{ secrets.ANSIBLE_PASSWORD }}" \
-            -e "ansible_ssh_common_args='-o PreferredAuthentications=password -o PubkeyAuthentication=no -o StrictHostKeyChecking=no'" \
+            --extra-vars "ansible_user=${{ secrets.ANSIBLE_USER }} ansible_ssh_pass=${{ secrets.ANSIBLE_PASSWORD }}" \
             -v
