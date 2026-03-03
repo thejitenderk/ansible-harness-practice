@@ -1,11 +1,11 @@
 ---
 
-- name: Install common packages
-  apt:
-    name:
-      - git
-      - curl
-      - wget
-      - unzip
-      - vim
-    state: present
+  - name: Install common packages
+    apt:
+      name:
+        - git
+        - curl
+        - wget
+        - unzip
+        - vim
+      state: present
