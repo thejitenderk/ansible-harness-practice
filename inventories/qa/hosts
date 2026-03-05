@@ -1,0 +1,2 @@
+[all]
+20.164.208.6 ansible_user=azureadmin ansible_ssh_pass={{ ansible_password }} ansible_connection=ssh
