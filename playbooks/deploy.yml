@@ -3,6 +3,6 @@
   hosts: all
   become: true
   gather_facts: false
-  roles:
-    - common
-    - webserver
+  tasks:
+    - name: Example from an Ansible Playbook
+      ansible.windows.win_ping:
