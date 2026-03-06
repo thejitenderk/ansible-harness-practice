@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       inventory:
-        description: 'Inventory path (e.g. inventories/qa)'
+        description: Inventory path
         required: true
-        default: 'inventories/qa'
+        default: inventories/qa
       playbook:
-        description: 'Playbook name (e.g. deploy.yml)'
+        description: Playbook
         required: true
-        default: 'deploy.yml'
+        default: deploy.yml
 
 jobs:
   ansible:
@@ -20,15 +20,13 @@ jobs:
       image: pad92/ansible-alpine:latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Show Ansible version
-        run: ansible --version
+      - name: Install WinRM deps
+        run: pip install pywinrm requests requests-ntlm
 
       - name: Run Playbook
         run: |
           ansible-playbook \
             -i "${{ github.event.inputs.inventory }}" \
             "playbooks/${{ github.event.inputs.playbook }}"
-          
