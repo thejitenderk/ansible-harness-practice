@@ -14,35 +14,21 @@ on:
 
 jobs:
   ansible:
-    name: Run Ansible
     runs-on: ubuntu-latest
 
-    env:
-      ANSIBLE_HOST_KEY_CHECKING: "False"
-      ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
-      ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+    container:
+      image: pad92/ansible-alpine:latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Ansible (Official PPA)
-        run: |
-          sudo apt update
-          sudo apt install -y software-properties-common
-          sudo add-apt-repository --yes --update ppa:ansible/ansible
-          sudo apt install -y ansible sshpass
-          ansible --version
+      - name: Show Ansible version
+        run: ansible --version
 
       - name: Run Playbook
         run: |
           ansible-playbook \
             -i "${{ github.event.inputs.inventory }}" \
-            "playbooks/${{ github.event.inputs.playbook }}" \
-            -e ansible_user="$ANSIBLE_USER" \
-            -e ansible_password="$ANSIBLE_PASSWORD" \
-            -e ansible_become_password="$ANSIBLE_PASSWORD" \
-            -e ansible_connection=ssh \
-            -e ansible_ssh_common_args="-o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no" \
-            -f 1 \
-            -vv
+            "playbooks/${{ github.event.inputs.playbook }}"
+          
