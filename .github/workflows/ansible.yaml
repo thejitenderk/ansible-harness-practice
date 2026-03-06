@@ -25,6 +25,9 @@ jobs:
       - name: Install WinRM deps
         run: pip install pywinrm requests requests-ntlm
 
+      - name: Test inventory parsing
+        run: ansible-inventory -i inventories/qa --list
+
       - name: Run Playbook
         run: |
           ansible-playbook \
