@@ -12,12 +12,17 @@ on:
         required: true
         default: deploy.yml
 
+env:
+  ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+  ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+
 jobs:
   ansible:
     runs-on: ubuntu-latest
 
     container:
       image: pad92/ansible-alpine:latest
+
 
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +32,11 @@ jobs:
 
       - name: Test inventory parsing
         run: ansible-inventory -i inventories/qa --list
+      - name: Test connection
+        env:
+          ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+          ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+        run: ansible windows -i inventories/qa -m win_ping
 
       - name: Run Playbook
         run: |
