@@ -1,8 +1,6 @@
 ---
 - name: Deploy App
   hosts: all
-  become: true
-  gather_facts: false
   tasks:
     - name: Example from an Ansible Playbook
       ansible.windows.win_ping:
