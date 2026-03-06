@@ -1,5 +1,5 @@
 [all]
-20.164.208.6
+40.123.241.41
 
 [all:vars]
 ansible_connection: winrm
