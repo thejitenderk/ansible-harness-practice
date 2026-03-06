@@ -1,2 +1,8 @@
 [all]
 20.164.208.6
+
+[all:vars]
+ansible_connection: winrm
+ansible_winrm_transport: basic
+ansible_user: azureadmin
+ansible_password: Welcom$1234
