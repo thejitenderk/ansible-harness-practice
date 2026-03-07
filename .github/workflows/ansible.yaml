@@ -48,7 +48,7 @@ jobs:
                 ansible_winrm_scheme=http"
 
       - name: Optional Ansible Lint
-        if: false  # Enable if needed
+        if: true
         run: ansible-lint playbooks/
 
       - name: Dry Run (Check Mode)
