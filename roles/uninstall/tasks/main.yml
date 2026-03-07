@@ -9,4 +9,3 @@
   apt:
     name: nginx
     state: absent
-

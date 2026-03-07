@@ -1,3 +1,4 @@
+---
 ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
 ansible_ssh_pass: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
 ansible_connection: winrm

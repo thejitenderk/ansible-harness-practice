@@ -7,4 +7,3 @@
 
 - name: Run a command
   win_command: hostname
-
