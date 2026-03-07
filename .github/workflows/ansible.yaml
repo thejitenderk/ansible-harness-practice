@@ -11,6 +11,10 @@ on:
         description: Playbook
         required: true
         default: deploy.yml
+      host_group:
+        description: Target host group
+        required: false
+        default: all
 
 env:
   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
@@ -34,11 +38,12 @@ jobs:
           ansible-galaxy collection install -r requirements.yml
 
       - name: Test inventory parsing
-        run: ansible-inventory -i "${{ github.event.inputs.inventory }}" --list
+        run: ansible-inventory -l "${{ github.event.inputs.host_group }}" -i "${{ github.event.inputs.inventory }}" --list
 
       - name: Sanity Check - Windows Connectivity
         run: |
           ansible-playbook playbooks/sanity.yml -vvv \
+            -l "${{ github.event.inputs.host_group }}" \
             -i "${{ github.event.inputs.inventory }}" \
             -e "ansible_connection=winrm \
                 ansible_user=$ANSIBLE_USER \
@@ -54,6 +59,7 @@ jobs:
       - name: Dry Run (Check Mode)
         run: |
           ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" -vvv \
+            -l "${{ github.event.inputs.host_group }}" \
             -i "${{ github.event.inputs.inventory }}" \
             -e "ansible_connection=winrm \
                 ansible_user=$ANSIBLE_USER \
@@ -66,9 +72,9 @@ jobs:
       - name: Run Playbook (Deploy)
         if: success()
         run: |
-          ansible-playbook \
+          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" -vvv \
+            -l "${{ github.event.inputs.host_group }}" \
             -i "${{ github.event.inputs.inventory }}" \
-            "playbooks/${{ github.event.inputs.playbook }}" \
             -e "ansible_connection=winrm \
                 ansible_user=$ANSIBLE_USER \
                 ansible_password=$ANSIBLE_PASSWORD \
