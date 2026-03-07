@@ -23,38 +23,55 @@ jobs:
     container:
       image: pad92/ansible-alpine:latest
 
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
           ansible-galaxy collection install -r requirements.yml
 
       - name: Test inventory parsing
-        run: ansible-inventory -i inventories/qa --list
+        run: ansible-inventory -i "${{ github.event.inputs.inventory }}" --list
 
-      # - name: Ansible Lint
-      #   run: ansible-lint
-
-      - name: Sanity Check
+      - name: Sanity Check - Windows Connectivity
         run: |
           ansible-playbook playbooks/sanity.yml \
-          -i "${{ github.event.inputs.inventory }}" \
-          -e "ansible_user=$ANSIBLE_USER ansible_password=$ANSIBLE_PASSWORD"
+            -i "${{ github.event.inputs.inventory }}" \
+            -e "ansible_connection=winrm \
+                ansible_user=$ANSIBLE_USER \
+                ansible_password=$ANSIBLE_PASSWORD \
+                ansible_winrm_transport=basic \
+                ansible_winrm_port=5985 \
+                ansible_winrm_scheme=http"
 
-      - name: Dry Run
+      - name: Optional Ansible Lint
+        if: false  # Enable if needed
+        run: ansible-lint playbooks/
+
+      - name: Dry Run (Check Mode)
         run: |
           ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
-          -i "${{ github.event.inputs.inventory }}" \
-          -e "ansible_user=$ANSIBLE_USER ansible_password=$ANSIBLE_PASSWORD" \
-          --check
+            -i "${{ github.event.inputs.inventory }}" \
+            -e "ansible_connection=winrm \
+                ansible_user=$ANSIBLE_USER \
+                ansible_password=$ANSIBLE_PASSWORD \
+                ansible_winrm_transport=basic \
+                ansible_winrm_port=5985 \
+                ansible_winrm_scheme=http" \
+            --check
 
-      - name: Run Playbook
+      - name: Run Playbook (Deploy)
         if: success()
         run: |
           ansible-playbook \
             -i "${{ github.event.inputs.inventory }}" \
             "playbooks/${{ github.event.inputs.playbook }}" \
-            -e "ansible_user=$ANSIBLE_USER ansible_password=$ANSIBLE_PASSWORD"
+            -e "ansible_connection=winrm \
+                ansible_user=$ANSIBLE_USER \
+                ansible_password=$ANSIBLE_PASSWORD \
+                ansible_winrm_transport=basic \
+                ansible_winrm_port=5985 \
+                ansible_winrm_scheme=http"
