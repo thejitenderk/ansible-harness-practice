@@ -1,11 +1,12 @@
 ---
-- name: Install nginx
-  apt:
-    name: nginx
+- name: Install IIS
+  win_feature:
+    name: Web-Server
     state: present
+    include_sub_features: yes
+    include_management_tools: yes
 
-- name: Start and enable nginx
-  service:
-    name: nginx
-    state: started
-    enabled: yes
+- name: Install .NET Framework
+  win_feature:
+    name: NET-Framework-Core
+    state: present

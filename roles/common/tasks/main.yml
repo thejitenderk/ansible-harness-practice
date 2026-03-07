@@ -1,14 +1,10 @@
 ---
-- name: Update apt cache
-  apt:
-    update_cache: yes
+# Run PowerShell commands
+- name: Get Windows version
+  win_shell: |
+    Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version
+  register: os_info
 
-- name: Install common packages
-  apt:
-    name:
-      - git
-      - curl
-      - wget
-      - unzip
-      - vim
-    state: present
+- name: Run a command
+  win_command: hostname
+
