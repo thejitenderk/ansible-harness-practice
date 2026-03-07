@@ -1,2 +1,2 @@
 [windows_servers]
-win01 ansible_host=40.123.241.41
+win01 ansible_host=20.219.108.130
