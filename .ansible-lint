@@ -1,0 +1,17 @@
+# .ansible-lint
+
+skip_list:
+  # Skip rules that are irrelevant or too strict
+  - experimental            # Skip experimental module warnings
+  - no-changed-when          # Skip warnings about changed_when not set
+  - command-instead-of-module # Skip if you must use shell/command
+
+warn_list:
+  # Rules you want to WARN but not fail
+  - yaml    # YAML formatting issues
+  - task-name   # Warn if task names are missing
+
+verbosity: 3           # Optional: sets ansible-lint verbosity
+
+exclude_paths:
+  - tests/               # Optional: skip linting test folders
