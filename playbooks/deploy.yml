@@ -1,7 +1,7 @@
 ---
 - name: Configure Windows Web Server
   hosts: all
-  gather_facts: true
+  gather_facts: yes
 
   tasks:
     - name: Install IIS
