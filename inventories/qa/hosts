@@ -1,10 +1,11 @@
-[windows]
-40.123.241.41
+# inventory/hosts
+[windows_servers]
+win01 ansible_host=40.123.241.41
 
-[windows:vars]
+[windows_servers:vars]
+ansible_user=azureadmin
+ansible_password=Welcome$1234
 ansible_connection=winrm
-ansible_port=5985
 ansible_winrm_transport=basic
-ansible_winrm_server_cert_validation=ignore
-ansible_user={{ lookup('env', 'ANSIBLE_USER') }}
-ansible_password={{ lookup('env', 'ANSIBLE_PASSWORD') }}
+ansible_winrm_port=5985
+ansible_winrm_scheme=http
