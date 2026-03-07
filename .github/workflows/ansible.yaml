@@ -38,7 +38,7 @@ jobs:
 
       - name: Sanity Check - Windows Connectivity
         run: |
-          ansible-playbook playbooks/sanity.yml \
+          ansible-playbook playbooks/sanity.yml -vvv \
             -i "${{ github.event.inputs.inventory }}" \
             -e "ansible_connection=winrm \
                 ansible_user=$ANSIBLE_USER \
@@ -53,7 +53,7 @@ jobs:
 
       - name: Dry Run (Check Mode)
         run: |
-          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
+          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" -vvv \
             -i "${{ github.event.inputs.inventory }}" \
             -e "ansible_connection=winrm \
                 ansible_user=$ANSIBLE_USER \
