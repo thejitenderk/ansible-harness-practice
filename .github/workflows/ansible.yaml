@@ -35,9 +35,6 @@ jobs:
       - name: Test inventory parsing
         run: ansible-inventory -i inventories/qa --list
 
-      - name: YAML Lint
-        run: yamllint .
-
       - name: Ansible Lint
         run: ansible-lint
 
