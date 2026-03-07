@@ -21,18 +21,6 @@
         path: C:\inetpub\myapp
         state: directory
 
-    - name: Deploy website content
-      ansible.windows.win_copy:
-        src: website/
-        dest: C:\inetpub\myapp\
-
-    - name: Configure IIS site
-      community.windows.win_iis_website:
-        name: MyApp
-        state: started
-        port: 80
-        physical_path: C:\inetpub\myapp
-
     - name: Ensure Windows Firewall allows HTTP
       community.windows.win_firewall_rule:
         name: HTTP-Inbound
