@@ -1,0 +1,6 @@
+ansible
+ansible-lint
+yamllint
+pywinrm
+requests
+requests-ntlm

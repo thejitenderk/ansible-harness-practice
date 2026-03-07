@@ -27,19 +27,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install WinRM deps
-        run: pip install pywinrm requests requests-ntlm
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          ansible-galaxy collection install -r requirements.yml
 
       - name: Test inventory parsing
         run: ansible-inventory -i inventories/qa --list
 
-      - name: Test connection
-        env:
-          ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
-          ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
-        run: ansible all -i "${{ github.event.inputs.inventory }}" -m win_ping
+      - name: YAML Lint
+        run: yamllint .
+
+      - name: Ansible Lint
+        run: ansible-lint
+
+      - name: Sanity Check
+        run: |
+          ansible-playbook playbooks/sanity.yml \
+          -i "${{ github.event.inputs.inventory }}"
+
+      - name: Dry Run
+        run: |
+          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
+          -i "${{ github.event.inputs.inventory }}" \
+          --check
 
       - name: Run Playbook
+        if: success()
         run: |
           ansible-playbook \
             -i "${{ github.event.inputs.inventory }}" \

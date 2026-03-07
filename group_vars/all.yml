@@ -1,3 +1,6 @@
-# ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
-# ansible_ssh_pass: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
-# ansible_become_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+ansible_ssh_pass: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
+ansible_connection: winrm
+ansible_winrm_transport: basic
+ansible_winrm_port: 5985
+ansible_winrm_scheme: http
