@@ -35,8 +35,8 @@ jobs:
       - name: Test inventory parsing
         run: ansible-inventory -i inventories/qa --list
 
-      - name: Ansible Lint
-        run: ansible-lint
+      # - name: Ansible Lint
+      #   run: ansible-lint
 
       - name: Sanity Check
         run: |

@@ -1,51 +1,50 @@
 ---
 - name: Configure Windows Web Server
   hosts: all
-  gather_facts: yes
+  gather_facts: true
 
   tasks:
     - name: Install IIS
-      win_feature:
+      ansible.windows.win_feature:
         name: Web-Server
         state: present
-        include_management_tools: yes
+        include_management_tools: true
       register: iis_install
 
     - name: Reboot if required by IIS install
-      win_reboot:
+      ansible.windows.win_reboot:
         reboot_timeout: 300
       when: iis_install.reboot_required
 
     - name: Create web application directory
-      win_file:
+      ansible.windows.win_file:
         path: C:\inetpub\myapp
         state: directory
 
     - name: Deploy website content
-      win_copy:
+      ansible.windows.win_copy:
         src: website/
         dest: C:\inetpub\myapp\
 
     - name: Configure IIS site
-      win_iis_website:
+      community.windows.win_iis_website:
         name: MyApp
         state: started
         port: 80
         physical_path: C:\inetpub\myapp
 
     - name: Ensure Windows Firewall allows HTTP
-      win_firewall_rule:
+      community.windows.win_firewall_rule:
         name: HTTP-Inbound
         localport: 80
         action: allow
         direction: in
         protocol: tcp
         state: present
-        enabled: yes
+        enabled: true
 
     - name: Ensure IIS service is running
-      win_service:
+      ansible.windows.win_service:
         name: W3SVC
         state: started
         start_mode: auto
-        
