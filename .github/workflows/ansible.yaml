@@ -45,12 +45,8 @@ jobs:
           ansible-playbook playbooks/sanity.yml -vvv \
             -l "${{ github.event.inputs.host_group }}" \
             -i "${{ github.event.inputs.inventory }}" \
-            -e "ansible_connection=winrm \
-                ansible_user=$ANSIBLE_USER \
-                ansible_password=$ANSIBLE_PASSWORD \
-                ansible_winrm_transport=basic \
-                ansible_winrm_port=5985 \
-                ansible_winrm_scheme=http"
+            -e "ansible_user=$ANSIBLE_USER \
+                ansible_password=$ANSIBLE_PASSWORD"
 
       - name: Optional Ansible Lint
         if: true
@@ -61,12 +57,8 @@ jobs:
           ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" -vvv \
             -l "${{ github.event.inputs.host_group }}" \
             -i "${{ github.event.inputs.inventory }}" \
-            -e "ansible_connection=winrm \
-                ansible_user=$ANSIBLE_USER \
-                ansible_password=$ANSIBLE_PASSWORD \
-                ansible_winrm_transport=basic \
-                ansible_winrm_port=5985 \
-                ansible_winrm_scheme=http" \
+            -e "ansible_user=$ANSIBLE_USER \
+                ansible_password=$ANSIBLE_PASSWORD" \
             --check
 
       - name: Run Playbook (Deploy)
@@ -75,9 +67,5 @@ jobs:
           ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" -vvv \
             -l "${{ github.event.inputs.host_group }}" \
             -i "${{ github.event.inputs.inventory }}" \
-            -e "ansible_connection=winrm \
-                ansible_user=$ANSIBLE_USER \
-                ansible_password=$ANSIBLE_PASSWORD \
-                ansible_winrm_transport=basic \
-                ansible_winrm_port=5985 \
-                ansible_winrm_scheme=http"
+            -e "ansible_user=$ANSIBLE_USER \
+                ansible_password=$ANSIBLE_PASSWORD"
