@@ -32,11 +32,12 @@ jobs:
 
       - name: Test inventory parsing
         run: ansible-inventory -i inventories/qa --list
+
       - name: Test connection
         env:
           ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
           ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
-        run: ansible windows -i inventories/qa -m win_ping
+        run: ansible all -i "${{ github.event.inputs.inventory }}" -m win_ping
 
       - name: Run Playbook
         run: |
