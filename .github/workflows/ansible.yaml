@@ -41,12 +41,14 @@ jobs:
       - name: Sanity Check
         run: |
           ansible-playbook playbooks/sanity.yml \
-          -i "${{ github.event.inputs.inventory }}"
+          -i "${{ github.event.inputs.inventory }}" \
+          -e "ansible_user=$ANSIBLE_USER ansible_password=$ANSIBLE_PASSWORD"
 
       - name: Dry Run
         run: |
           ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
           -i "${{ github.event.inputs.inventory }}" \
+          -e "ansible_user=$ANSIBLE_USER ansible_password=$ANSIBLE_PASSWORD" \
           --check
 
       - name: Run Playbook
@@ -54,4 +56,5 @@ jobs:
         run: |
           ansible-playbook \
             -i "${{ github.event.inputs.inventory }}" \
-            "playbooks/${{ github.event.inputs.playbook }}"
+            "playbooks/${{ github.event.inputs.playbook }}" \
+            -e "ansible_user=$ANSIBLE_USER ansible_password=$ANSIBLE_PASSWORD"
