@@ -15,7 +15,7 @@ on:
       host_group:
         description: Target host group
         required: false
-        default: all
+        default: windows_servers
 
 env:
   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
