@@ -49,9 +49,8 @@ jobs:
         run: |
           ansible-playbook playbooks/sanity.yml -vvv \
             -l "${{ github.event.inputs.host_group }}" \
-            -i "${{ github.event.inputs.inventory }}" \
-            -e "ansible_user=$ANSIBLE_USER \
-                ansible_password=$ANSIBLE_PASSWORD"
+            -i "${{ github.event.inputs.inventory }}"
+  
 
       # - name: Optional Ansible Lint
       #   if: true
