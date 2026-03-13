@@ -40,6 +40,11 @@ jobs:
       - name: Test inventory parsing
         run: ansible-inventory -l "${{ github.event.inputs.host_group }}" -i "${{ github.event.inputs.inventory }}" --list
 
+      - name: Check env vars exist
+        run: |
+          echo "User set: $( [ -n "$ANSIBLE_USER" ] && echo YES || echo NO )"
+          echo "Pass set: $( [ -n "$ANSIBLE_PASSWORD" ] && echo YES || echo NO )"
+    
       - name: Sanity Check - Windows Connectivity
         run: |
           ansible-playbook playbooks/sanity.yml -vvv \
