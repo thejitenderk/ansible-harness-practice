@@ -4,7 +4,7 @@ win01 ansible_host=64.236.168.143
 
 
 [windows_servers:vars]
-ansible_connection: winrm
-ansible_winrm_transport: ntlm
-ansible_winrm_port: 5985
-ansible_winrm_scheme: http
+ansible_connection=winrm
+ansible_winrm_transport=ntlm
+ansible_winrm_port=5985
+ansible_winrm_scheme=http
