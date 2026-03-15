@@ -75,12 +75,14 @@ jobs:
 
       - name: Run QA
         run: |
+          export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
           ansible-playbook playbooks/deploy.yml \
             -l all \
             -i inventories/qa
 
       - name: Run PROD
         run: |
+          export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
           ansible-playbook playbooks/deploy.yml \
             -l all \
             -i inventories/prod
