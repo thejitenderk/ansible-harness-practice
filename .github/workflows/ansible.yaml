@@ -75,13 +75,12 @@ jobs:
 
       - name: Run QA
         run: |
-          ansible-playbook playbooks/${{ github.event.inputs.playbook }} \
+          ansible-playbook playbooks/deploy.yml \
             -l all \
             -i inventories/qa
 
       - name: Run PROD
         run: |
-          ansible-playbook playbooks/${{ github.event.inputs.playbook }} \
+          ansible-playbook playbooks/deploy.yml \
             -l all \
             -i inventories/prod
-            
