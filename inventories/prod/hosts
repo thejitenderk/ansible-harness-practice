@@ -1,5 +1,5 @@
 [windows]
-win1 ansible_host=137.116.143.57
+win1 ansible_host=20.198.91.88
 
 [windows:vars]
 ansible_user=azureadmin
