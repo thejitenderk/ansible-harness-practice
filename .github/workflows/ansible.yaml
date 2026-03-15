@@ -84,10 +84,6 @@ on:
         description: Playbook
         required: true
         default: deploy.yml
-      host_group:
-        description: Target host group
-        required: false
-        default: windows_servers
 
 env:
   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
@@ -95,6 +91,7 @@ env:
 
 jobs:
   ansible:
+    name: ansible-${{ matrix.inventory }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -115,8 +112,7 @@ jobs:
 
       - name: Test inventory parsing
         run: |
-          ansible-inventory -l "${{ github.event.inputs.host_group }}" \
-          -i "${{ matrix.inventory }}" --list
+          ansible-inventory -i "${{ matrix.inventory }}" --list
 
       - name: Check env vars exist
         run: |
@@ -126,11 +122,12 @@ jobs:
       - name: Sanity Check - Windows Connectivity
         run: |
           ansible-playbook playbooks/sanity.yml -vvv \
-            -l "${{ github.event.inputs.host_group }}" \
+            -l all \
             -i "${{ matrix.inventory }}"
 
       - name: Run Playbook (Deploy)
         if: success()
         run: |
-          ansible-playbook all "playbooks/${{ github.event.inputs.playbook }}" \
+          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
+            -l all \
             -i "${{ matrix.inventory }}"
