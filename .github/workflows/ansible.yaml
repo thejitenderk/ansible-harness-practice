@@ -37,7 +37,6 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip3 install -r requirements.txt
-          ansible-galaxy collection install -r requirements.yml
 
       # - name: Test inventory parsing
       #   run: ansible-inventory -l "${{ github.event.inputs.host_group }}" -i "${{ github.event.inputs.inventory }}" --list
