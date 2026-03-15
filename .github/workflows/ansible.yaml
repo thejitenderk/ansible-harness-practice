@@ -25,12 +25,14 @@ jobs:
   ansible:
     runs-on: self-hosted
 
-    container:
-      image: pad92/ansible-alpine:latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Install Ansible
+        run: |
+          pip3 install ansible
 
       - name: Install Python dependencies
         run: |
