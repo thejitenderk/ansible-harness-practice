@@ -1,9 +1,0 @@
----
-ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
-ansible_password: "{{ lookup('env', 'ANSIBLE_PASSWORD') }}"
-ansible_connection: psrp
-ansible_psrp_port: 5986
-ansible_psrp_scheme: https
-ansible_psrp_cert_validation: ignore
-ansible_psrp_message_encryption: always
-ansible_winrm_transport: ntlm

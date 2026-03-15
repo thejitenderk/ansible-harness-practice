@@ -8,10 +8,10 @@ on:
         description: Inventory path
         required: true
         default: inventories/qa
-      # playbook:
-      #   description: Playbook
-      #   required: true
-      #   default: deploy.yml
+      playbook:
+        description: Playbook
+        required: true
+        default: deploy.yml
       host_group:
         description: Target host group
         required: false
@@ -34,7 +34,6 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip
           pip install -r requirements.txt
           ansible-galaxy collection install -r requirements.yml
 
@@ -66,11 +65,9 @@ jobs:
       #           ansible_password=$ANSIBLE_PASSWORD" \
       #       --check
 
-      # - name: Run Playbook (Deploy)
-      #   if: success()
-      #   run: |
-      #     ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" -vvv \
-      #       -l "${{ github.event.inputs.host_group }}" \
-      #       -i "${{ github.event.inputs.inventory }}" \
-      #       -e "ansible_user=$ANSIBLE_USER \
-      #           ansible_password=$ANSIBLE_PASSWORD"
+      - name: Run Playbook (Deploy)
+        if: success()
+        run: |
+          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
+            -l "${{ github.event.inputs.host_group }}" \
+            -i "${{ github.event.inputs.inventory }}" 
