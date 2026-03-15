@@ -1,55 +1,55 @@
-# name: Ansible Deploy
+name: Ansible Deploy
 
-# on:
-#   push:
-#   workflow_dispatch:
-#     inputs:
-#       inventory:
-#         description: Inventory path
-#         required: true
-#         default: inventories/qa
-#       playbook:
-#         description: Playbook
-#         required: true
-#         default: deploy.yml
-#       host_group:
-#         description: Target host group
-#         required: false
-#         default: windows_servers
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      inventory:
+        description: Inventory path
+        required: true
+        default: inventories/qa
+      playbook:
+        description: Playbook
+        required: true
+        default: deploy.yml
+      # host_group:
+      #   description: Target host group
+      #   required: false
+      #   default: windows_servers
 
-# env:
-#   ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
-#   ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
+env:
+  ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
+  ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
 
-# jobs:
-#   ansible:
-#     runs-on: ubuntu-latest
+jobs:
+  ansible:
+    runs-on: self-hosted
 
-#     container:
-#       image: pad92/ansible-alpine:latest
+    container:
+      image: pad92/ansible-alpine:latest
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-#       - name: Install Python dependencies
-#         run: |
-#           pip install -r requirements.txt
-#           ansible-galaxy collection install -r requirements.yml
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          ansible-galaxy collection install -r requirements.yml
 
-#       - name: Test inventory parsing
-#         run: ansible-inventory -l "${{ github.event.inputs.host_group }}" -i "${{ github.event.inputs.inventory }}" --list
+      # - name: Test inventory parsing
+      #   run: ansible-inventory -l "${{ github.event.inputs.host_group }}" -i "${{ github.event.inputs.inventory }}" --list
 
-#       - name: Check env vars exist
-#         run: |
-#           echo "User set: $( [ -n "$ANSIBLE_USER" ] && echo YES || echo NO )"
-#           echo "Pass set: $( [ -n "$ANSIBLE_PASSWORD" ] && echo YES || echo NO )"
+      # - name: Check env vars exist
+      #   run: |
+      #     echo "User set: $( [ -n "$ANSIBLE_USER" ] && echo YES || echo NO )"
+      #     echo "Pass set: $( [ -n "$ANSIBLE_PASSWORD" ] && echo YES || echo NO )"
     
-#       - name: Sanity Check - Windows Connectivity
-#         run: |
-#           ansible-playbook playbooks/sanity.yml -vvv \
-#             -l "${{ github.event.inputs.host_group }}" \
-#             -i "${{ github.event.inputs.inventory }}"
+      # - name: Sanity Check - Windows Connectivity
+      #   run: |
+      #     ansible-playbook playbooks/sanity.yml -vvv \
+      #       -l "${{ github.event.inputs.host_group }}" \
+      #       -i "${{ github.event.inputs.inventory }}"
   
 
 #       # - name: Optional Ansible Lint
@@ -65,69 +65,21 @@
 #       #           ansible_password=$ANSIBLE_PASSWORD" \
 #       #       --check
 
-#       - name: Run Playbook (Deploy)
-#         if: success()
-#         run: |
-#           ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
-#             -l "${{ github.event.inputs.host_group }}" \
-#             -i "${{ github.event.inputs.inventory }}" 
+      # - name: Run Playbook (Deploy)
+      #   if: success()
+      #   run: |
+      #     ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
+      #       -l "${{ github.event.inputs.host_group }}" \
+      #       -i "${{ github.event.inputs.inventory }}" 
 
-
-
-name: Ansible Deploy
-
-on:
-  push:
-  workflow_dispatch:
-    inputs:
-      playbook:
-        description: Playbook
-        required: true
-        default: deploy.yml
-
-env:
-  ANSIBLE_USER: ${{ secrets.ANSIBLE_USER }}
-  ANSIBLE_PASSWORD: ${{ secrets.ANSIBLE_PASSWORD }}
-
-jobs:
-  ansible:
-    name: ansible-${{ matrix.inventory }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        inventory: [inventories/qa, inventories/prod]
-
-    container:
-      image: pad92/ansible-alpine:latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Python dependencies
+      - name: Run QA
         run: |
-          pip install -r requirements.txt
-          ansible-galaxy collection install -r requirements.yml
-
-      - name: Test inventory parsing
-        run: |
-          ansible-inventory -i "${{ matrix.inventory }}" --list
-
-      - name: Check env vars exist
-        run: |
-          echo "User set: $( [ -n "$ANSIBLE_USER" ] && echo YES || echo NO )"
-          echo "Pass set: $( [ -n "$ANSIBLE_PASSWORD" ] && echo YES || echo NO )"
-
-      - name: Sanity Check - Windows Connectivity
-        run: |
-          ansible-playbook playbooks/sanity.yml -vvv \
+          ansible-playbook playbooks/${{ github.event.inputs.playbook }} \
             -l all \
-            -i "${{ matrix.inventory }}"
+            -i inventories/qa
 
-      - name: Run Playbook (Deploy)
-        if: success()
+      - name: Run PROD
         run: |
-          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
+          ansible-playbook playbooks/${{ github.event.inputs.playbook }} \
             -l all \
-            -i "${{ matrix.inventory }}"
+            -i inventories/prod
