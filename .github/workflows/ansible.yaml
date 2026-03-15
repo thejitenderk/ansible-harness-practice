@@ -84,4 +84,3 @@ jobs:
           ansible-playbook playbooks/${{ github.event.inputs.playbook }} \
             -l all \
             -i inventories/prod
-            
