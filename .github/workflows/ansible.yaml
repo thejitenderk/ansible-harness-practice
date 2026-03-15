@@ -132,6 +132,5 @@ jobs:
       - name: Run Playbook (Deploy)
         if: success()
         run: |
-          ansible-playbook "playbooks/${{ github.event.inputs.playbook }}" \
-            -l "${{ github.event.inputs.host_group }}" \
+          ansible-playbook all "playbooks/${{ github.event.inputs.playbook }}" \
             -i "${{ matrix.inventory }}"
