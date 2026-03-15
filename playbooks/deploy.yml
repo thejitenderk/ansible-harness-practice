@@ -4,35 +4,18 @@
   gather_facts: true
 
   tasks:
+
     - name: Install IIS
-      ansible.windows.win_feature:
+      win_feature:
         name: Web-Server
         state: present
-        include_management_tools: true
-      register: iis_install
-
-    - name: Reboot if required by IIS install
-      ansible.windows.win_reboot:
-        reboot_timeout: 300
-      when: iis_install.reboot_required
-
-    - name: Create web application directory
-      ansible.windows.win_file:
-        path: C:\inetpub\myapp
-        state: directory
-
-    - name: Ensure Windows Firewall allows HTTP
-      community.windows.win_firewall_rule:
-        name: HTTP-Inbound
-        localport: 80
-        action: allow
-        direction: in
-        protocol: tcp
-        state: present
-        enabled: true
+        include_management_tools: yes
 
     - name: Ensure IIS service is running
-      ansible.windows.win_service:
+      win_service:
         name: W3SVC
         state: started
-        start_mode: auto
+
+    - name: Benchmark - Run 100 commands
+      win_shell: Get-Date
+      loop: "{{ range(1,100) }}"
